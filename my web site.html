@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lolcame | Creative Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root, .theme-default {
+            --primary: #7c3aed;
+            --secondary: #6d28d9;
+            --accent: #c026d3;
+            --bg: #020617;
+            --text: #f8fafc;
+            --card: #0f172a;
+        }
+
+        .theme-light {
+            --primary: #3b82f6;
+            --secondary: #2563eb;
+            --accent: #4f46e5;
+            --bg: #f3f4f6;
+            --text: #111827;
+            --card: #ffffff;
+        }
+
+        .theme-retro {
+            --primary: #f97316;
+            --secondary: #eab308;
+            --accent: #f59e0b;
+            --bg: #1e1b1b;
+            --text: #f3f4f6;
+            --card: #292524;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .hero-section {
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1px;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.2) 0%, rgba(15, 23, 42, 0) 50%),
+                        radial-gradient(circle at 90% 80%, rgba(192, 38, 211, 0.2) 0%, rgba(15, 23, 42, 0) 50%);
+        }
+        
+        .card {
+            background-color: var(--card);
+            border-radius: 16px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            will-change: transform;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(124, 58, 237, 0.1), 0 10px 10px -5px rgba(124, 58, 237, 0.04);
+            border: 1px solid var(--primary);
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            will-change: transform;
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--card);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 100px;
+        }
+        
+        /* Typing Animation */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        .type-animation {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 1.5s steps(30, end);
+        }
+        
+        /* Particle background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+        
+        /* Cursor */
+        .cursor-wave {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transition: transform 0.1s, width 0.2s, height 0.2s;
+        }
+        
+        .cursor-wave::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .fixed-social {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="theme-default">
+    <!-- Particle Background -->
+    <div class="particles"></div>
+    
+   <!-- In your navigation section (around line 90) -->
+<nav class="fixed w-full z-50 backdrop-blur-md bg-opacity-80 bg-gray-900">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold gradient-text">lolcame</a>
+        
+        <!-- Search Bar - Add this with your existing nav items -->
+        <div class="hidden md:flex items-center space-x-8">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Search..." 
+                    class="bg-gray-800 border border-gray-700 rounded-full py-2 px-4 pl-10 focus:outline-none focus:border-purple-500 w-48 transition-all duration-300"
+                    id="searchInput"
+                >
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <!-- Your existing nav links -->
+            <a href="#about" class="hover:text-purple-300 transition">About</a>
+            <a href="#projects" class="hover:text-purple-300 transition">Projects</a>
+            <a href="#contact" class="hover:text-purple-300 transition">Contact</a>
+            
+            <!-- Your theme switcher remains unchanged -->
+            <div class="relative group ml-4">
+                <!-- ... existing theme switcher code ... -->
+            </div>
+        </div>
+        
+        <!-- Mobile menu button (unchanged) -->
+        <button id="mobileMenuBtn" class="md:hidden text-purple-300">
+            <!-- ... existing SVG icon ... -->
+        </button>
+    </div>
+</nav>
+
+<!-- Add this script at the bottom of your file -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            const query = this.value.toLowerCase();
+            // Customize what happens when searching
+            alert(`Searching for: ${query}\n\nThis is a demo search. Connect to a real search function or API as needed.`);
+            
+            // Example: Scroll to section if matches
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                if (section.textContent.toLowerCase().includes(query)) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+    });
+</script>
+
+   <!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-90 z-40 flex flex-col items-center justify-center hidden md:hidden">
+    <button id="closeMenuBtn" class="absolute top-6 right-6 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+    
+    <!-- Search Bar at Top -->
+    <div class="px-4 w-full mb-8">  <!-- Increased bottom margin -->
+        <div class="relative max-w-xs mx-auto">  <!-- Constrained width and centered -->
+            <input 
+                type="text" 
+                placeholder="Search..." 
+                class="bg-gray-800 border border-gray-700 rounded-full py-3 px-5 pl-12 focus:outline-none focus:border-purple-500 w-full text-white"
+                id="mobileSearchInput"
+            >
+            <i class="fas fa-search absolute left-5 top-3.5 text-gray-400"></i>  <!-- Adjusted positioning -->
+        </div>
+    </div>
+    
+    <!-- Menu Items -->
+    <div class="flex flex-col space-y-6 text-center w-full px-6">  <!-- Added width and padding -->
+        <a href="#about" class="text-2xl text-white hover:text-purple-300 transition py-2">About</a>
+        <a href="#projects" class="text-2xl text-white hover:text-purple-300 transition py-2">Projects</a>
+        <a href="#contact" class="text-2xl text-white hover:text-purple-300 transition py-2">Contact</a>
+    </div>
+    
+    <!-- Theme Switcher -->
+    <div class="flex space-x-4 justify-center mt-8 pt-6 border-t border-gray-800 w-full max-w-xs">  <!-- Added top border -->
+        <button onclick="setTheme('default')" class="px-4 py-2 rounded-lg bg-purple-900 bg-opacity-50 text-purple-300 hover:bg-opacity-70 transition">Dark</button>
+        <button onclick="setTheme('light')" class="px-4 py-2 rounded-lg bg-blue-900 bg-opacity-50 text-blue-300 hover:bg-opacity-70 transition">Light</button>
+        <button onclick="setTheme('retro')" class="px-4 py-2 rounded-lg bg-orange-900 bg-opacity-50 text-yellow-300 hover:bg-opacity-70 transition">Retro</button>
+    </div>
+</div>
+
+<script>
+    // Mobile search functionality
+    document.getElementById('mobileSearchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            const query = this.value.toLowerCase();
+            // Close mobile menu when searching
+            document.getElementById('mobileMenu').classList.add('hidden');
+            
+            // Basic search implementation - customize as needed
+            const sections = ['about', 'projects', 'contact'];
+            for (const section of sections) {
+                if (document.getElementById(section).textContent.toLowerCase().includes(query)) {
+                    document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
+                    break;
+                }
+            }
+        }
+    });
+</script>
+ <!-- Hero Section -->
+<section class="hero-section flex items-center justify-center fade-in">
+    <div class="hero-content text-center px-4">
+        <!-- Profile Image with Float Animation -->
+        <div class="float mx-auto mb-4">
+            <div class="relative">
+                <!-- Glow Effect -->
+                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-xl opacity-30 animate-pulse"></div>
+                
+                <!-- Profile Image -->
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1efd9e6f-753e-40fb-a1eb-7d3be3a5292c.png" 
+                     alt="lolcame profile picture"
+                     class="relative rounded-full w-44 h-44 md:w-60 md:h-60 object-cover border-[3px] border-purple-400 hover:border-pink-400 transition-all duration-300">
+            </div>
+        </div>
+        
+        <!-- Name Text -->
+        <h1 class="text- md:text-6xl font-extrabold gradient-text tracking-tight mb-12">
+       lolcame
+        </h1>
+        
+        <!-- Optional Subtitle -->
+        <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Creative Developer & Digital Designer
+        </p>
+        
+        <!-- Buttons -->
+        <div class="flex justify-center space-x-4">
+            <a href="#contact" class="px-6 py-3 gradient-bg rounded-full font-medium hover:opacity-90 transition">
+                Contact Me
+            </a>
+            <a href="#projects" class="px-6 py-3 border border-purple-500 rounded-full font-medium hover:bg-purple-500 hover:bg-opacity-10 transition">
+                My Work
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Add this right after your hero section -->
+<section class="relative overflow-hidden">
+  <!-- Canvas Animation Background -->
+  <canvas id="interactiveCanvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+  
+  <!-- Your existing content container -->
+  <div class="container mx-auto px-4 py-20 relative z-10">
+    <!-- Your about/projects content here -->
+  </div>
+</section>
+
+<!-- Add this script before closing body tag -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('interactiveCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Particle system
+    const particles = [];
+    const particleCount = window.innerWidth < 768 ? 30 : 100;
+    
+    // Particle class
+    class Particle {
+      constructor() {
+        this.reset();
+        this.y = Math.random() * canvas.height;
+      }
+      
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = -20;
+        this.size = Math.random() * 3 + 1;
+        this.speed = Math.random() * 1 + 0.5;
+        this.opacity = Math.random() * 0.6 + 0.1;
+        this.color = `hsla(${Math.random() * 60 + 250}, 80%, 60%, ${this.opacity})`;
+      }
+      
+      update() {
+        this.y += this.speed;
+        if (this.y > canvas.height) this.reset();
+      }
+      
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    // Animation loop
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw particles
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      
+      // Connect particles
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 100) {
+            ctx.strokeStyle = `hsla(250, 80%, 60%, ${1 - distance/100})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    // Interactive mouse effect
+    let mouseX = null;
+    let mouseY = null;
+    
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    
+    window.addEventListener('mouseout', () => {
+      mouseX = null;
+      mouseY = null;
+    });
+  });
+  // In the Particle class
+this.color = `hsla(${Math.random() * 60 + 250}, 80%, 60%, ${this.opacity})`;
+// Change the 250 (hue) for different color ranges
+// Change this line for more/fewer particles
+const particleCount = window.innerWidth < 768 ? 30 : 100;
+// Add this to the Particle's update method
+if (mouseX && mouseY) {
+  const dx = mouseX - this.x;
+  const dy = mouseY - this.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  if (distance < 100) {
+    this.x -= dx * 0.02;
+    this.y -= dy * 0.02;
+  }
+}
+</script>
+
+  
+
+    <!-- About Me Section -->
+    <section id="about" class="py-20 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center gradient-text">🧠 About Me</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="card p-8 h-full">
+                        <h3 class="text-2xl font-bold mb-4">Who am I?</h3>
+                        <p class="mb-4 leading-relaxed">
+                            I'm a creative developer with a passion for building visually stunning and functional digital experiences. 
+                            When I'm not coding, you can find me exploring new tech trends, making aesthetic mood boards, or drinking 
+                            iced coffee regardless of the weather.
+                        </p>
+                        <p class="leading-relaxed">
+                            My approach blends technical skills with an eye for design, creating products that are both powerful and 
+                            pleasing to look at. I believe in the power of technology to create meaningful connections.
+                        </p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">JavaScript</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">TailwindCSS</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">Node.js</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">UI/UX</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">TypeScript</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">Next.js</span>
+                            <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 rounded-full text-sm">Figma</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card p-6 hover:bg-purple-900 hover:bg-opacity-10 transition">
+                        <i class="fas fa-heart text-pink-500 text-2xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Aesthetic Design</h4>
+                        <p class="text-sm text-gray-300">Clean, modern interfaces with attention to detail</p>
+                    </div>
+                    <div class="card p-6 hover:bg-indigo-900 hover:bg-opacity-10 transition">
+                        <i class="fas fa-bolt text-yellow-500 text-2xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Fast Performance</h4>
+                        <p class="text-sm text-gray-300">Optimized code for seamless user experiences</p>
+                    </div>
+                    <div class="card p-6 hover:bg-blue-900 hover:bg-opacity-10 transition">
+                        <i class="fas fa-mobile-alt text-blue-400 text-2xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Responsive</h4>
+                        <p class="text-sm text-gray-300">Perfectly adapts to any device</p>
+                    </div>
+                    <div class="card p-6 hover:bg-green-900 hover:bg-opacity-10 transition">
+                        <i class="fas fa-rocket text-green-500 text-2xl mb-3"></i>
+                        <h4 class="font-bold mb-2">Innovative</h4>
+                        <p class="text-sm text-gray-300">Creative solutions to modern problems</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 bg-gray-900 bg-opacity-50">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center gradient-text">✨ My Projects</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="card overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/eb6302e7-efa0-4362-97fc-5450ecd68fa8.png" alt="Modern e-commerce dashboard with analytics charts and product listings" 
+                             class="w-full h-48 object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-sm text-purple-400">React • Node.js</span>
+                        <h3 class="text-xl font-bold mt-1 mb-2">E-Commerce Dashboard</h3>
+                        <p class="text-gray-300 text-sm mb-4">Complete dashboard with analytics, product management, and order tracking.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-sm hover:text-purple-300">Live Demo</a>
+                            <a href="#" class="text-sm hover:text-purple-300">Code</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="card overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cf49e3de-0196-4fd4-b054-86d947a1c305.png" alt="Social media mobile app interface with vibrant colors and modern UI elements" 
+                             class="w-full h-48 object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-sm text-pink-400">Flutter • Firebase</span>
+                        <h3 class="text-xl font-bold mt-1 mb-2">Social App</h3>
+                        <p class="text-gray-300 text-sm mb-4">Mobile-first social platform with real-time updates and user engagement.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-sm hover:text-purple-300">Live Demo</a>
+                            <a href="#" class="text-sm hover:text-purple-300">Code</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="card overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3c54c658-2a31-466b-89bc-71eb0d03b837.png" alt="Interactive data visualization dashboard with animated charts and graphs" 
+                             class="w-full h-48 object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-sm text-blue-400">D3.js • Python</span>
+                        <h3 class="text-xl font-bold mt-1 mb-2">Data Viz Platform</h3>
+                        <p class="text-gray-300 text-sm mb-4">Interactive data visualization tool for complex datasets with customizable dashboards.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-sm hover:text-purple-300">Live Demo</a>
+                            <a href="#" class="text-sm hover:text-purple-300">Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  <div class="card p-8">
+    <h3 class="text-xl font-bold mb-4">Get in Touch</h3>
+    <p class="mb-6">Have a project in mind or just want to say hi? I'd love to hear from you!</p>
+    <div class="space-y-4">
+        <!-- 1. Email with custom logo -->
+        <a href="mailto:hello@lolcame.dev" class="flex items-center gap-4 p-3 hover:bg-gray-800 rounded-lg transition">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email" class="w-full h-full object-contain p-1">
+            </div>
+            <div>
+                <p class="font-medium">Email</p>
+                <p class="text-sm text-gray-300">hello@lolcame.dev</p>
+            </div>
+        </a>
+
+        <!-- 2. Twitter with custom logo -->
+        <a href="https://twitter.com/lolcame" target="_blank" rel="noopener" class="flex items-center gap-4 p-3 hover:bg-gray-800 rounded-lg transition">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <p class="font-medium">Twitter</p>
+                <p class="text-sm text-gray-300">@lolcame</p>
+            </div>
+        </a>
+
+        <!-- 3. GitHub with custom logo -->
+        <a href="https://github.com/lolcame" target="_blank" rel="noopener" class="flex items-center gap-4 p-3 hover:bg-gray-800 rounded-lg transition">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <p class="font-medium">GitHub</p>
+                <p class="text-sm text-gray-300">github.com/lolcame</p>
+            </div>
+        </a>
+    </div>
+  </div>
+  <br>
+            
+            <!-- Contact Form (unchanged) -->
+            <div class="card p-8">
+                <h3 class="text-xl font-bold mb-4">Send a Message</h3>
+                <form id="contactForm" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium mb-1">Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium mb-1">Message</label>
+                        <textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:outline-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 gradient-bg rounded-full font-medium hover:opacity-90 transition">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Footer -->
+    <footer class="py-8 px-4 border-t border-gray-800">
+        <div class="container mx-auto text-center">
+            <p class="text-sm text-gray-400">© 2023 lolcame. All vibes reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Wave Cursor -->
+    <div class="cursor-wave" id="cursor"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+        
+        // Form validation and submission
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                if (!name || !email || !message) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Here you would typically send the form data to a server
+                alert(`Thanks for your message, ${name}! I'll get back to you soon.`);
+                contactForm.reset();
+            });
+        }
+        
+        // Theme switching
+        function setTheme(themeName) {
+            document.documentElement.className = 'theme-' + themeName;
+            localStorage.setItem('theme', themeName);
+        }
+
+        // Load saved theme or default
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'default';
+            setTheme(savedTheme);
+        })();
+
+        // Cursor animation
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        // Hover effects
+        document.querySelectorAll('a, button, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.width = '30px';
+                cursor.style.height = '30px';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.width = '20px';
+                cursor.style.height = '20px';
+            });
+        });
+
+        // Create particle background
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                
+                // Random animation
+                const animationDuration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${animationDuration}s infinite ease-in-out`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
