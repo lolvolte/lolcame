@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Minecraft Server</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background-color: #2c2c2c;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #a6e22e;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 60px 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    h2 {
+      color: #a6e22e;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 400px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      display: block;
+    }
+
+    button {
+      background-color: #a6e22e;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2c2c2c;
+      font-size: 0.9em;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Minecraft Server</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#server">Server Detail</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="home" class="container">
+    <h2>Welcome</h2>
+    <p>Join our awesome Minecraft server and start your adventure today!</p>
+  </section>
+
+  <section id="about" class="container">
+    <h2>About</h2>
+    <p>This server was built by Minecraft lovers, for Minecraft lovers. Whether you're into building, PvP, or survival, we've got something for you.</p>
+  </section>
+
+  <section id="server" class="container">
+    <h2>Server Detail</h2>
+    <div class="form-group">
+      <label for="serverName">Server Name:</label>
+      <input type="text" id="serverName" placeholder="e.g., PixelCraft" required>
+    </div>
+    <div class="form-group">
+      <label for="ip">Server IP:</label>
+      <input type="text" id="ip" placeholder="e.g., play.pixelcraft.net" required>
+    </div>
+    <div class="form-group">
+      <label for="version">Minecraft Version:</label>
+      <input type="text" id="version" placeholder="e.g., 1.20.1" required>
+    </div>
+    <button onclick="sendEmail()">Send via Email</button>
+  </section>
+
+  <section id="contact" class="container">
+    <h2>Contact</h2>
+    <p>If you have any questions, feel free to reach out to us via Discord or email at <strong>admin@myserver.com</strong></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 My Minecraft Server. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function sendEmail() {
+      const name = document.getElementById('serverName').value.trim();
+      const ip = document.getElementById('ip').value.trim();
+      const version = document.getElementById('version').value.trim();
+
+      if (!name || !ip || !version) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const subject = encodeURIComponent("Minecraft Server Info");
+      const body = encodeURIComponent(
+        `Server Name: ${name}\nServer IP: ${ip}\nVersion: ${version}`
+      );
+
+      // Change this to your real email
+const mailtoLink = `mailto:vikrambryadav@gmail.com?subject=${subject}&body=${body}`;
+window.location.href = mailtoLink;
+
+    }
+  </script>
+</body>
+</html>
